@@ -1,0 +1,3 @@
+include ':crash'
+include ':app'
+rootProject.name = "AppCrash"

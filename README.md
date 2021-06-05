@@ -1,7 +1,11 @@
+@[toc]
+
+---
 ## App Crash
 
 在应用程序Crash的时候， 我们通常想收集一些信息来帮助分析本次Crash。下面列举了一些在应用程序Crash的时候，应该收集的一些基本信息。
-注意：此次在应用程序Crash时收集的信息，只用于帮助分析OutOfMemoryError异常，对其它异常只做参考。
+
+注意：此次在应用程序Crash时收集的信息，只用于帮助分析**OutOfMemoryError**异常，对其它异常只做参考。
 
 ### 发生OOM的Java虚拟机内存区域
 
@@ -22,15 +26,15 @@ Java虚拟机会发生的OutOfMemoryError的内存区域：
  - 方法区：当方法区无法满足内存分配需求时，将抛出OutOfMemoryError异常。
  - 运行常量池：当常量池无法再申请到内存会抛出OutOfMemoryError异常。
 
---- 
+---
 
 ### 如何收集
 
-通过接口Thread.UncaughtExceptionHandler可以知道应用程序Crash时机，在接口回调方法uncaughtException中获取异常信息，Thread.UncaughtExceptionHandler的作用如下：
+通过接口`Thread.UncaughtExceptionHandler`可以知道应用程序Crash时机，并在它的接口回调方法`uncaughtException`中获取异常信息。Thread.UncaughtExceptionHandler 的作用如下：
 
- - 当线程因未捕获的异常而突然终止时调用的处理程序接口。
- - 当线程由于未捕获的异常而即将终止时，Java虚拟机将使用{@link #getUncaughtExceptionHandler}向线程查询其UncaughtExceptionHandler，并将调用处理程序的uncaughtException方法，将线程和异常作为参数传递。
- - 如果某个线程没有显式设置其UncaughtExceptionHandler，则其ThreadGroup对象将充当其UncaughtExceptionHandler。 如果ThreadGroup对象没有处理异常的特殊要求，它可以将调用转发到{@linkplain #getDefaultUncaughtExceptionHandler默认的未捕获异常处理程序}。
+ - 当线程因未捕获的异常而突然终止时调用的处理程序接口；
+ - 当线程由于未捕获的异常而即将终止时，Java虚拟机将使用{@link #getUncaughtExceptionHandler}向线程查询其UncaughtExceptionHandler，并将调用处理程序的 uncaughtException方法，将线程和异常作为参数传递；
+ - 如果某个线程没有显式设置其 UncaughtExceptionHandler，则其 ThreadGroup 对象将充当其 UncaughtExceptionHandler。 如果ThreadGroup对象没有处理异常的特殊要求，它可以将调用转发到{@linkplain #getDefaultUncaughtExceptionHandler默认的未捕获异常处理程序}。
 
 ```
     @FunctionalInterface
@@ -129,12 +133,12 @@ public class YourApplication extents Application
 
 应用程序内存信息包括：系统给应用程序分配的最大内存，Java虚拟机将尝试使用的最大内存量，当前可用于当前和未来对象的内存总量等。
 
- - ActivityManager#getMemoryClass：系统能给应用程序分配的最大内存。
- - ActivityManager#getLargeMemoryClass：在LargeHeap下，系统能给应用程序分配的最大内存。
- - Runtime#maxMemory：返回Java虚拟机将尝试使用的最大内存量。 如果没有固有限制，则返回值{@link java.lang.Long #MAX_VALUE}。
- - Runtime#totalMemory：返回Java虚拟机中的内存总量。 此方法返回的值可能会随时间而变化，具体取决于主机环境。请注意，保存任何给定类型的对象所需的内存量可能与实现有关。当前可用于当前和未来对象的内存总量，以字节为单位。
- - Runtime#freeMemory：返回Java虚拟机中的可用内存量。 调用gc方法可能会导致freeMemory返回的值增加。当前可用于未来分配对象的内存总量的近似值，以字节为单位。
- - Runtime#totalMemory - Runtime#freeMemory：当前已使用内存。
+ - `ActivityManager#getMemoryClass`：**系统能给应用程序分配的最大内存**。
+ - `ActivityManager#getLargeMemoryClass`：**在LargeHeap下，系统能给应用程序分配的最大内存**。
+ - `Runtime#maxMemory`：返回Java虚拟机将尝试使用的最大内存量。 如果没有固有限制，则返回值{@link java.lang.Long #MAX_VALUE}。
+ - `Runtime#totalMemory`：返回Java虚拟机中的内存总量。 此方法返回的值可能会随时间而变化，具体取决于主机环境。请注意，保存任何给定类型的对象所需的内存量可能与实现有关。当前可用于当前和未来对象的内存总量，以字节为单位。
+ - `Runtime#freeMemory`：返回Java虚拟机中的可用内存量。 调用gc方法可能会导致freeMemory返回的值增加。当前可用于未来分配对象的内存总量的近似值，以字节为单位。
+ - `Runtime#totalMemory - Runtime#freeMemory`：当前已使用内存。
 
 ```
     /**
@@ -170,10 +174,10 @@ public class YourApplication extents Application
 
 系统内存信息包括：系统总内存，系统剩余内存，系统是否处于低内存等。
 
- - ActivityManager.MemoryInfo.totalMem：内核可访问的总内存。 这基本上是设备的RAM大小，不包括DMA缓冲区之类的内核固定分配，基带CPU的RAM等。
- - ActivityManager.MemoryInfo.availMem：系统上的可用内存。 这个数字不应该被认为是绝对的：由于内核的性质，这个内存的很大一部分实际上在使用，并且需要整个系统运行良好。
- - ActivityManager.MemoryInfo.threshold：表示低内存阈值，低于这个阈值，就表示内存很低并开始查杀后台服务和其他非外部进程。
- - ActivityManager.MemoryInfo.lowMemory：如果系统认为自己当前处于低内存状态，则设置为true。
+ - `ActivityManager.MemoryInfo.totalMem`：内核可访问的总内存。 这基本上是设备的RAM大小，不包括DMA缓冲区之类的内核固定分配，基带CPU的RAM等。
+ - `ActivityManager.MemoryInfo.availMem`：系统上的可用内存。 这个数字不应该被认为是绝对的：由于内核的性质，这个内存的很大一部分实际上在使用，并且需要整个系统运行良好。
+ - `ActivityManager.MemoryInfo.threshold`：**表示低内存阈值，低于这个阈值，就表示内存很低并开始查杀后台服务和其他非外部进程**。
+ - **ActivityManager.MemoryInfo.lowMemory**：**如果系统认为自己当前处于低内存状态，则设置为true**。
 
 ```
     /**
@@ -214,15 +218,16 @@ public class YourApplication extents Application
 
 PSS 结果一个比较好的特性是，您可以将所有进程的 PSS 相加来确定所有进程正在使用的实际内存。这意味着 PSS 适合测定进程的实际 RAM 比重和比较其他进程的 RAM 使用情况与可用总 RAM。
 
- - java-heap：从 Java 或 Kotlin 代码分配的对象内存。
- - native-heap：从 C 或 C++ 代码分配的对象内存。（即使您的应用中不使用 C++，您也可能会看到此处使用的一些原生内存，因为 Android 框架使用原生内存代表您处理各种任务，如处理图像资源和其他图形时，即使您编写的代码采用 Java 或 Kotlin 语言。）
- -  code：您的应用用于处理代码和资源（如 dex 字节码、已优化或已编译的 dex 码、.so 库和字体）的内存。
- -   stack： 您的应用中的原生堆栈和 Java 堆栈使用的内存。 这通常与您的应用运行多少线程有关。
- - graphics：图形缓冲区队列向屏幕显示像素（包括 GL 表面、GL 纹理等等）所使用的内存。 （请注意，这是与 CPU 共享的内存，不是 GPU 专用内存。）
- - total-pss： 包括所有 Zygote 分配（如上述 PSS 定义所述，通过进程之间的共享内存量来衡量）
- 
+ - `java-heap`：从 Java 或 Kotlin 代码分配的对象内存。
+ - `native-heap`：从 C 或 C++ 代码分配的对象内存。（即使您的应用中不使用 C++，您也可能会看到此处使用的一些原生内存，因为 Android 框架使用原生内存代表您处理各种任务，如处理图像资源和其他图形时，即使您编写的代码采用 Java 或 Kotlin 语言。）
+ -  `code`：您的应用用于处理代码和资源（如 dex 字节码、已优化或已编译的 dex 码、.so 库和字体）的内存。
+ -   `stack`： 您的应用中的原生堆栈和 Java 堆栈使用的内存。 这通常与您的应用运行多少线程有关。
+ - `graphics`：**图形缓冲区队列向屏幕显示像素（包括 GL 表面、GL 纹理等等）所使用的内存**。 （请注意，这是与 CPU 共享的内存，不是 GPU 专用内存。）
+ - `total-pss`： 包括所有 Zygote 分配（如上述 PSS 定义所述，通过进程之间的共享内存量来衡量）
+
 
 利用 Debug.MemoryInfo#getMemoryStats方法获取：
+
 ```
    /**
      * 调试下程序运行时内存信息
@@ -572,8 +577,111 @@ class AppColdStart {
     }
 }
 ```
+
+#### 获取线程信息
+通过`Thread.getAllStackTraces`获取相关线程信息（线程数目，线程名称列表）：
+```
+    /**
+     * 获取线程相关信息
+     *
+     * @return 线程相关信息
+     */
+    private static String getThreadInfo() {
+        JSONObject threadInfo = new JSONObject();
+        Map<Thread, StackTraceElement[]> traces = Thread.getAllStackTraces();
+
+        Iterator<Thread> keyIterator = traces.keySet().iterator();
+        List<String> threadNameList = new ArrayList<>(traces.size());
+        while (keyIterator.hasNext()) {
+            threadNameList.add(keyIterator.next().getName());
+        }
+        try {
+            threadInfo.put("threadCount", traces.size());
+            threadInfo.put("threadNameList", threadNameList);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return threadInfo.toString();
+    }
+```
+
+#### 获取fd信息
+通过读取文件`/proc/" + Process.myPid() + "/fd`，获取当前应用程序相关的fd信息（fd数目，fd名称列表）：
+```
+    /**
+     * 获取fd信息
+     *
+     * @return fd信息
+     */
+    private static String getFdInfo() {
+        JSONObject fdInfo = new JSONObject();
+        File fdFile = new File("/proc/" + Process.myPid() + "/fd");
+        int fdCount = 0;
+        List<String> fdNameList = new ArrayList<>();
+        if (fdFile.exists()) {
+            File[] fileList = fdFile.listFiles();
+            fdCount = fileList.length;
+            for (File file : fileList) {
+                try {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        fdNameList.add(Os.readlink(file.getAbsolutePath()));
+                    } else {
+                        fdNameList.add(file.getAbsolutePath());
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    fdNameList.add(file.getAbsolutePath());
+                }
+            }
+        }
+        try {
+            fdInfo.put("fdCount", fdCount);
+            fdInfo.put("fdNameList", fdNameList);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return fdInfo.toString();
+    }
+```
+#### 获取GC信息
+主要是关注的信息是：运行的GC次数，GC使用的总耗时，阻塞式GC的次数，阻塞式GC的总耗时等
+```
+    /**
+     * 获取gc相关信息
+     */
+    private fun getGCInfo(): String {
+        val json = JSONObject()
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                // 运行的GC次数
+                val gcCount: String? = Debug.getRuntimeStat("art.gc.gc-count")
+                // GC使用的总耗时，单位是毫秒
+                val gcTime: String? = Debug.getRuntimeStat("art.gc.gc-time")
+                // 阻塞式GC的次数
+                val gcBlockingCount: String? = Debug.getRuntimeStat("art.gc.blocking-gc-count")
+                // 阻塞式GC的总耗时
+                val gcBlockingTime: String? = Debug.getRuntimeStat("art.gc.blocking-gc-time")
+                json.put("gcCount", gcCount)
+                json.put("gcTime", gcTime)
+                json.put("gcBlockingCount", gcBlockingCount)
+                json.put("gcBlockingTime", gcBlockingTime)
+            } else {
+                val allocCount = Debug.getGlobalAllocCount().toLong()
+                val allocSize = Debug.getGlobalAllocSize().toLong()
+                val gcCount = Debug.getGlobalGcInvocationCount().toLong()
+                json.put("allocCount", allocCount)
+                json.put("allocSize", allocSize)
+                json.put("gcCount", gcCount)
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        return json.toString()
+    }
+```
+
 #### 其他信息
 
-除了上面的信息外，还可以统计用户使用应用程序的时间，在各个Activity停留的时间信息等，具体可查看[AppCrash](https://github.com/WJRye/AppCrash)中的[TrackActivity](https://github.com/WJRye/AppCrash/blob/master/crash/TrackActivity.java)类。
+除了上面的信息外，还可以统计用户使用应用程序的时间，在各个Activity停留的时间信息等，具体可查看Github地址[AppCrash](https://github.com/WJRye/AppCrash)中的[TrackActivity](https://github.com/WJRye/AppCrash/blob/master/crash/TrackActivity.java)类。
 
 
